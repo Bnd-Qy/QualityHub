@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quality.mapper.SlaveMapper">
+    <insert id="createSlave" useGeneratedKeys="true" keyProperty="id">
+        insert into q_slave(ip,port,username,password,tag,is_online,is_used,own,create_time,update_time)
+        values(
+        #{ip},#{port},#{username},#{password},#{tag},#{isOnline},#{isUsed},#{createUser},#{createTime},#{updateTime}
+        )
+    </insert>
+
+    <resultMap id="slaveMap" type="com.quality.model.SlaveModel">
+        <id property="id" column="id"/>
+        <result property="ip" column="ip"/>
+        <result property="port" column="port"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="tag" column="tag"/>
+        <result property="isOnline" column="is_online"/>
+        <result property="isUsed" column="is_used"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="slaveMap">
+        select id,ip,port,username,password,tag,is_online,is_used,create_time,update_time from q_slave;
+    </select>
+
+    <select id="findById" resultMap="slaveMap">
+        select id,ip,port,username,password,tag,is_online,is_used,create_time,update_time from q_slave
+        <where>
+            id=#{id}
+        </where>
+    </select>
+
+    <update id="updateSlave">
+        update q_slave
+        <set>
+            <if test="ip!=null">
+                ip=#{ip},
+            </if>
+            <if test="port!=null">
+                port=#{port},
+            </if>
+            <if test="username!=null">
+                username=#{username},
+            </if>
+            <if test="password!=null">
+                password=#{password},
+            </if>
+            <if test="tag!=null">
+                tag=#{tag},
+            </if>
+            <if test="isOnline!=null">
+                is_online=#{isOnline},
+            </if>
+            <if test="isUsed!=null">
+                is_used=#{isUsed},
+            </if>
+            <if test="updateTime!=null">
+                update_time=#{updateTime}
+            </if>
+        </set>
+    </update>
+
+    <select id="findOnlineNotUsedSlaveByTag" resultMap="slaveMap">
+        select id,ip,port,username,password,tag,is_online,is_used,create_time,update_time from q_slave
+        <where>
+            tag=#{tag}
+            and is_online='1'
+            and is_used='0'
+        </where>
+    </select>
+
+    <select id="findOnLivedSlave" resultMap="slaveMap">
+        select id,ip,port,username,password,tag,is_online,is_used,create_time,update_time from q_slave
+        <where>
+            and is_online='1'
+        </where>
+    </select>
+
+    <select id="findByIP" resultMap="slaveMap">
+        select id,ip,port,username,password,tag,is_online,is_used,create_time,update_time from q_slave
+        <where>
+            ip=#{ip}
+        </where>
+    </select>
+</mapper>
