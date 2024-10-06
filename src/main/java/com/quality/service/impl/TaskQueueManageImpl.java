@@ -9,11 +9,12 @@ import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 
 @Slf4j
 @Service
 public class TaskQueueManageImpl implements TaskQueueManage {
-    private Map<Long, ArrayBlockingQueue<?>> taskQueuePool;
+    private Map<Long, ArrayBlockingQueue<Future<String>>> taskQueuePool;
 
     private final TaskQueueProperties taskQueueProperties;
 
@@ -27,12 +28,12 @@ public class TaskQueueManageImpl implements TaskQueueManage {
     }
 
     @Override
-    public Map<Long, ArrayBlockingQueue<?>> findAllTaskQueue() {
+    public Map<Long, ArrayBlockingQueue<Future<String>>> findAllTaskQueue() {
         return taskQueuePool;
     }
 
     @Override
-    public ArrayBlockingQueue<?> findTaskQueueById(Long id) {
+    public ArrayBlockingQueue<Future<String>> findTaskQueueById(Long id) {
         if (taskQueuePool.containsKey(id)) {
             return taskQueuePool.get(id);
         }
