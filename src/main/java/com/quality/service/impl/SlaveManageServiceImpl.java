@@ -6,6 +6,7 @@ import com.quality.model.SlaveModel;
 import com.quality.model.dto.SlaveCreateDTO;
 import com.quality.model.vo.SlaveInfoVo;
 import com.quality.service.SlaveManageService;
+import com.quality.service.TaskQueueManage;
 import com.quality.service.UserService;
 import com.quality.utils.ShellUtil;
 import org.springframework.beans.BeanUtils;
@@ -22,11 +23,13 @@ public class SlaveManageServiceImpl implements SlaveManageService {
     private final SlaveMapper slaveMapper;
     private final ShellUtil shellUtil;
     private final UserService userService;
+    private final TaskQueueManage taskQueueManage;
 
-    public SlaveManageServiceImpl(ShellUtil shellUtil, SlaveMapper slaveMapper, UserService userService) {
+    public SlaveManageServiceImpl(ShellUtil shellUtil, SlaveMapper slaveMapper, UserService userService, TaskQueueManage taskQueueManage) {
         this.shellUtil = shellUtil;
         this.slaveMapper = slaveMapper;
         this.userService = userService;
+        this.taskQueueManage = taskQueueManage;
     }
 
     @Override
@@ -47,6 +50,8 @@ public class SlaveManageServiceImpl implements SlaveManageService {
         }
         slave.setIsOnline(true);
         slaveMapper.updateSlave(slave);
+        //为每个salve创建一个任务队列
+        taskQueueManage.addTaskQueue(slaveId);
     }
 
     @Override
